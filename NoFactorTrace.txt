@@ -1,0 +1,121 @@
+C:\tomcat4\webapps\hck\WEB-INF\classes>java fol.ZTestTry2
+------------------------------------------
+out: &&((uq ?x ||(P(?x a) P(a ?x))) (uq ?y ||(~(P(?y a)) ~(P(a ?y)))))
+formula: &&((uq ?x ||(P(?x a) P(a ?x))) (uq ?y ||(~(P(?y a)) ~(P(a ?y)))))
+miniscope: &&((uq ?x ||(P(?x a) P(a ?x))) (uq ?y ||(~(P(?y a)) ~(P(a ?y))))
+skolemized: &&((uq ?x ||(P(?x a) P(a ?x))) (uq ?y ||(~(P(?y a)) ~(P(a ?y)))
+stripped: &&(||(P(?x a) P(a ?x)) ||(~(P(?y a)) ~(P(a ?y))))
+addClauses: &&(||(P(?x a) P(a ?x)) ||(~(P(?y a)) ~(P(a ?y))))
+addClauses: ||(P(?x a) P(a ?x))
+addClauses: ||(~(P(?y a)) ~(P(a ?y)))
+ClausedFormula:
+Formula: &&((uq ?x ||(P(?x a) P(a ?x))) (uq ?y ||(~(P(?y a)) ~(P(a ?y)))))
+PositiveClauses:
+Clause: Positive Literals: P(?x$1 a) P(a ?x$1)
+NegativeClauses:
+Clause: Negative Literals: P(?y$2 a) P(a ?y$2)
+Factor(s):
+Negative Literals: P(a a)
+
+cf: ClausedFormula:
+Formula: &&((uq ?x ||(P(?x a) P(a ?x))) (uq ?y ||(~(P(?y a)) ~(P(a ?y)))))
+PositiveClauses:
+Clause: Positive Literals: P(?x$1 a) P(a ?x$1)
+NegativeClauses:
+Clause: Negative Literals: P(?y$2 a) P(a ?y$2)
+Factor(s):
+Negative Literals: P(a a)
+
+nn: CGNode: deleted= false Negative
+Negative literals: 2
+CGLiteral: P(?y$2 a)
+CGLink: nIx: 0 P(?y$2 a)  pIx: 0 P(?x$1 a)  rank: 4
+CGLink: nIx: 0 P(?y$2 a)  pIx: 1 P(a ?x$1)  rank: 4
+
+CGLiteral: P(a ?y$2)
+CGLink: nIx: 1 P(a ?y$2)  pIx: 0 P(?x$1 a)  rank: 4
+CGLink: nIx: 1 P(a ?y$2)  pIx: 1 P(a ?x$1)  rank: 4
+
+
+pn: CGNode: deleted= false Positive
+Positive literals: 2
+CGLiteral: P(?x$1 a)
+CGLink: nIx: 0 P(?y$2 a)  pIx: 0 P(?x$1 a)  rank: 4
+CGLink: nIx: 1 P(a ?y$2)  pIx: 0 P(?x$1 a)  rank: 4
+
+CGLiteral: P(a ?x$1)
+CGLink: nIx: 0 P(?y$2 a)  pIx: 1 P(a ?x$1)  rank: 4
+CGLink: nIx: 1 P(a ?y$2)  pIx: 1 P(a ?x$1)  rank: 4
+
+
+cg: CG::::
+CGLink: nIx: 0 P(?y$2 a)  pIx: 0 P(?x$1 a)  rank: 4
+CGLink: nIx: 0 P(?y$2 a)  pIx: 1 P(a ?x$1)  rank: 4
+
+========= resolveCnt: 1
+cgLink CGLink: nIx: 0 P(?y$2 a)  pIx: 0 P(?x$1 a)  rank: 4
+nodeN CGNode: deleted= false Negative
+Negative literals: 2
+CGLiteral: P(?y$2 a)
+CGLink: nIx: 0 P(?y$2 a)  pIx: 0 P(?x$1 a)  rank: 4
+CGLink: nIx: 0 P(?y$2 a)  pIx: 1 P(a ?x$1)  rank: 4
+
+CGLiteral: P(a ?y$2)
+CGLink: nIx: 1 P(a ?y$2)  pIx: 0 P(?x$1 a)  rank: 4
+CGLink: nIx: 1 P(a ?y$2)  pIx: 1 P(a ?x$1)  rank: 4
+
+
+node CGNode: deleted= false Positive
+Positive literals: 2
+CGLiteral: P(?x$1 a)
+CGLink: nIx: 0 P(?y$2 a)  pIx: 0 P(?x$1 a)  rank: 4
+CGLink: nIx: 1 P(a ?y$2)  pIx: 0 P(?x$1 a)  rank: 4
+
+CGLiteral: P(a ?x$1)
+CGLink: nIx: 0 P(?y$2 a)  pIx: 1 P(a ?x$1)  rank: 4
+CGLink: nIx: 1 P(a ?y$2)  pIx: 1 P(a ?x$1)  rank: 4
+
+
+resolve() return value: 2
+========= resolveCnt: 2
+cgLink CGLink: nIx: 0 P(?y$2 a)  pIx: 1 P(a ?x$1)  rank: 4
+nodeN CGNode: deleted= false Negative
+Negative literals: 2
+CGLiteral: P(?y$2 a)
+CGLink: nIx: 0 P(?y$2 a)  pIx: 1 P(a ?x$1)  rank: 4
+
+CGLiteral: P(a ?y$2)
+CGLink: nIx: 1 P(a ?y$2)  pIx: 0 P(?x$1 a)  rank: 4
+CGLink: nIx: 1 P(a ?y$2)  pIx: 1 P(a ?x$1)  rank: 4
+
+
+node CGNode: deleted= false Positive
+Positive literals: 2
+CGLiteral: P(?x$1 a)
+CGLink: nIx: 1 P(a ?y$2)  pIx: 0 P(?x$1 a)  rank: 4
+
+CGLiteral: P(a ?x$1)
+CGLink: nIx: 0 P(?y$2 a)  pIx: 1 P(a ?x$1)  rank: 4
+CGLink: nIx: 1 P(a ?y$2)  pIx: 1 P(a ?x$1)  rank: 4
+
+
+Delete CGNode: CGNode: deleted= true Negative
+Negative literals: 2
+CGLiteral: P(?y$2 a)
+
+CGLiteral: P(a ?y$2)
+CGLink: nIx: 1 P(a ?y$2)  pIx: 0 P(?x$1 a)  rank: 4
+CGLink: nIx: 1 P(a ?y$2)  pIx: 1 P(a ?x$1)  rank: 4
+
+
+Delete CGNode: CGNode: deleted= true Positive
+Positive literals: 2
+CGLiteral: P(?x$1 a)
+
+CGLiteral: P(a ?x$1)
+CGLink: nIx: 1 P(a ?y$2)  pIx: 1 P(a ?x$1)  rank: 4
+
+
+resolve() return value: 0
+tryProve: 0
+cg: CG::::
