@@ -5,6 +5,7 @@ import java.util.*;
 
 public class Atom extends Formula {
     static final private boolean trace = false;
+    // static final private boolean trace = true;
 
     protected Symbol predicate;
     protected Vector args;

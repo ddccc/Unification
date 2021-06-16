@@ -1,6 +1,41 @@
 File: c:/ddc/Java/fol/aaReadMe.txt
-Date: Fri Sep 14 11:41:10 2018
+Date: Fri Sep 14 11:41:10 2018/ Tue Jun 15 17:43:02 2021
 
+This directory contains a Java package for un-typed first order logic.
+It contains a parser and theorem prover; see below for its specs.
+
+The package has been extended with files that contain alternatives for
+the (exponential) Robinson type unification algorithm, which is available
+in the file Atom.java.  The alternatives are (semi) linear.
+
+The file ZTestRUnify contains drivers for testing the Robinson version
+and uses the code in Atom.java.
+
+The file ZTestLUnify contains the Paterson-Wegman version and the
+drivers for testing it.
+
+The file ZTestBaader contains the Baader-Snyder version and the
+drivers for testing it.
+
+The file ZTest0 contains the DC version and the drivers for testing it.
+
+The drivers have different versions to execute individual argument
+pairs, groups of pairs, individual generators for pairs, groups of
+generators and other combinations.  The drivers contain 'trace'
+parameters that can be turned on/off.
+
+The file LinUnify.pdf has a description of these unification versions.
+
+Installation
+------------
+Create a directory 'fol' and include the content of the repository.
+To compile: execute in the directory fol simply: javac *.java.
+To execute a driver in a directory ABOVE fol execute, for example:
+    java fol.ZTestLUnify
+
+
+The theorem prover
+------------------
 This directory contains a first order logic, un-typed, theorem prover.
 Its core has a Kowalski type connection graph on which the unification
 algorithm operates. The connection graph contains clauses in cnf format.
@@ -21,5 +56,3 @@ https://dl.acm.org/citation.cfm?doid=6490.6491
 Files starting with "Z" show how to use the parser (text->formulas)
 for generating input and how to operate the theorem prover.
 
-[This module is a stop-gap component used for deliberation/ decision
-making in an agent design pattern/ sub-architecture.]
