@@ -15,17 +15,20 @@ public class ZTestBaader {
 	// The unify function return null in case of non-unification
 
 	// Parser parser = new Parser(false);
-	for (int i = 1; i <= 1; i++) {
+	// for (int i = 1; i <= 1; i++) {
+	for (int i = 2; i <= 2; i++) {
 	// for (int i = 1; i <= 7; i++) {
 	// for (int i = 800; i <= 810; i++) {
 	// for (int i = 100; i <= 1000; i = i + 100) {
 	// for (int i = 1500; i <= 1510; i++) {
 	    // if (trace) System.out.println("size: " + i);
-	    // String a = gen1argument(i); // generator
-	    // String b = gen2argument(i); // generator
-	    // String a = gen1argumentf(i); // generator
+	    String a = gen1arg1(i); // generator
+	    String b = gen1arg2(i); // generator
+	    // String a = gen1arg1f(i); // generator
 	    // String a = gen2arg1(i); // generator
 	    // String b = gen2arg2(i); // generator
+	    // if (trace) System.out.println("size: " + i);
+
 	    // String b = gen2arg2f(i); // generator
 	    // String a = gen3arg1(i); // generator
 	    // String b = gen3arg2(i); // generator
@@ -36,7 +39,10 @@ public class ZTestBaader {
 	    // System.out.println("a: " + a);
 	    // System.out.println("b: " + b);
 	    // ad hoc exmples if the generor is not used:
+
 	    //  not unifiable
+	    // String a = "P(?x)";  String b = "P(f(?x))";
+	    // String b = "P(?x)";  String a = "P(f(?x))";
 	    // String a = "P(a)";  String b = "P(f(a))"; // disjoint classes zz3 
 	    // String a = "P(a b)";  String b = "P(f(b) b)"; // incompatible arguments
 	    // String a = "P(f(a))";  String b = "P(g(a))";  // function match failure
@@ -50,8 +56,8 @@ public class ZTestBaader {
 	    // String a = "P(?x g(f(?x)))";  String b = "P(f(?y) ?y)"; // find-solution
 	    // String a = "P(?x ?y ?y)"; String b = "P(a ?x b)"; // unifClosure
 	    // String a = "P(?x h(?z) f(?x))"; String b = "P(g(?y) ?y ?z)"; // find-solution
-	    // String a = "P(?x g(?x))"; String b = "P(f(?y) ?y)";  // find-solution
 	    // String b = "P(?x h(?z) f(?x))"; String a = "P(g(?y) ?y ?z)"; // find-solution
+	    // String a = "P(?x g(?x))"; String b = "P(f(?y) ?y)";  // find-solution
 
 	    // unifiable
 	    // String a = "P(a)";  String b = "P(a)"; 
@@ -66,7 +72,7 @@ public class ZTestBaader {
 	    // String a = "P(?x ?y ?z)";  String b = "P(?y ?z a)";
 
 	    // String a = "P(?x f(?y))";  String b = "P(f(?y) f(f(?z)))"; // test post
-	    // String a = "P(a ?x f(a ?x))"; String b = "P(?y g(?y) f(?z g(?z)))"; // text
+	    // String a = "P(a ?x f(a ?x))"; String b = "P(?y g(?y) f(?z g(?z)))"; // text !!!
 
 	    // String a = "P(?x ?y a)"; String b = "P(?y ?x ?x)";
 	    // String a = "P(f(?x) g(a))"; String b = "P(?y ?x)";
@@ -86,20 +92,23 @@ public class ZTestBaader {
 	    // String a = "P(?x ?x ?x ?z ?z ?z ?x)"; String b = "P(?y1 ?y2 ?y3 ?y1 ?y2 ?y3 ?z)";
 	    // String b = "P(?x ?x ?x ?z ?z ?z ?x)"; String a = "P(?y1 ?y2 ?y3 ?y1 ?y2 ?y3 ?z)";
 
-	    // String a = "P(?x ?x)"; String b = "P(b a)";
+	    // Baader baader = new Baader();
 
-	    /*
+
+	    Baader ontooo = new Baader();
+
+	    // /*
 	    Vector out = null;
-	    Baader baader = new Baader();
-	    out = baader.unify(a, b);
+	    out = ontooo.unify(a, b);
 	    // System.out.println("--------------\nout: Unification " +
 	    //  	       ( null == out ? "failed" : "ok" ) );
 	    // */
 
+
 	    /*
 	    // Tests with generators
 	    int k, reps; long t0, delta;
-	    Baader ontooo = new Baader();
+	    // Baader ontooo = new Baader();
 	    runTests(ontooo, 2000); // warm up
 
 	    t0 = System.currentTimeMillis(); k = 1000; reps = 1500;
@@ -149,7 +158,7 @@ public class ZTestBaader {
 	    System.out.println();
 
 	    /*
-	    Baader ontooo = new Baader();
+	    // Baader ontooo = new Baader();
 	    runTests(ontooo, 2000); // warm up
 	    long t0 = System.currentTimeMillis();
 	    for ( int k = 1; k <= 100; k++) {
@@ -164,27 +173,98 @@ public class ZTestBaader {
 	    //  	       ( null == out ? "failed" : "ok" ) );
 	    // */
 
-	    // /*
-	    Baader ontooo = new Baader();
+	    /*
+	    // Baader ontooo = new Baader();
+	    {
+	    // SMALL size base tests OK
 	    runTests(ontooo, 2000); // warm up
-	    for ( int k = 100; k <= 1000; k+=100) { // gen1/f
-	    // for ( int k = 200; k <= 200; k+=100) { // gen2/f
-	    // for ( int k = 600; k <= 600; k+=100) { // gen3
-		long t0 = System.currentTimeMillis();
-		int reps = 400;
-		// gen1(ontooo, k, reps);
-		gen1f(ontooo, k, reps);
-		// gen2(ontooo, k, reps);
-		// gen2f(ontooo, k, reps);
-		// gen3(ontooo, k, reps);
-		// gen3f(ontooo, k, reps);
-		// add more here based on:
-		long delta = System.currentTimeMillis() - t0;
-		System.out.println("Example k: " + k + " delta timing: " + 
-				   String.format("%.2f", ((1.0/ reps) * delta)) +
-				   " cntf: " + (cntf/reps));
+	    int reps = 5000;
+	    System.out.println("SMALL size base tests OK/ reps:" + reps);
+	    for ( int k = 1; k <= 6; k++) {
+		int begin = 0;
+		int reps2 = 500;
+		float best = 100000;
+		while ( begin < reps ) {
+		    long t0 = System.currentTimeMillis();
+		    gen1(ontooo, k, reps2);
+		    gen2(ontooo, k, reps2);
+		    gen3(ontooo, k, reps2);
+		    gen4(ontooo, k, reps2);
+		    long delta = System.currentTimeMillis() - t0;
+		    if ( delta < best ) {
+			// System.out.println("delta: " + delta + " best: " + best);
+			best = delta;
+		    }
+		    begin = begin + reps2;
+		}
+		System.out.println("gen1-4 k: " + k + " timing: " + 
+				   String.format("%.5f", ((1.0/ (4*reps2)) * best)));
+	    }
 	    }
 	    // */
+	    /*
+	    // Baader ontooo = new Baader();
+	    // SMALL size base tests fail
+	    {
+	    runTests(ontooo, 2000); // warm up
+	    int reps = 5000;
+	    System.out.println("SMALL size base tests fail reps:" + reps);
+	    for ( int k = 1; k <= 6; k++) {
+		int begin = 0;
+		int reps2 = 500;
+		float best = 100000;
+		while ( begin < reps ) {
+		    long t0 = System.currentTimeMillis();
+		    gen1f(ontooo, k, reps2);
+		    gen2f(ontooo, k, reps2);
+		    gen3f(ontooo, k, reps2);
+		    gen4f(ontooo, k, reps2);
+		    long delta = System.currentTimeMillis() - t0;
+		    if ( delta < best ) {
+			// System.out.println("delta: " + delta + " best: " + best);
+			best = delta;
+		    }
+		    begin = begin + reps2;
+		}
+		System.out.println("gen1-4 k: " + k + " delta timing: " + 
+				   String.format("%.5f", ((1.0/ (4*reps2)) * best)));
+	    }
+	    }
+	    // */
+	    /*
+	    {
+	    // Large size base tests OK&fail
+	    // Baader ontooo = new Baader();
+	    runTests(ontooo, 2000); // warm up
+	    int reps = 5000;
+	    System.out.println("Large size base tests OK&fail reps:" + reps);
+	    for ( int k = 5; k <= 50; k = k*2) {
+		// { int k = 40;
+		int begin = 0;
+		int reps2 = 500;
+		float best = 100000;
+		while ( begin < reps ) {
+		    long t0 = System.currentTimeMillis();
+		    gen1(ontooo, k, reps2);
+		    gen1f(ontooo, k, reps2);
+		    gen2(ontooo, k, reps2);
+		    gen2f(ontooo, k, reps2);
+		    gen3(ontooo, k, reps2);
+		    gen3f(ontooo, k, reps2);
+		    gen4(ontooo, k, reps2);
+		    gen4f(ontooo, k, reps2);
+		    long delta = System.currentTimeMillis() - t0;
+		    if ( delta < best ) {
+			// System.out.println("delta: " + delta + " best: " + best);
+			best = delta;
+		    }
+		    begin = begin + reps2;
+		}
+		System.out.println("gen1-4 k: " + k + " delta timing: " + 
+				   String.format("%.5f", ((1.0/ (8*reps2)) * best)));
+		// reps = reps/2;
+	    }
+	    }
 
 	    /*
 	    Baader ontooo = new Baader();
@@ -198,7 +278,18 @@ public class ZTestBaader {
 		System.out.println("Example k: " + i + " delta timing: " + delta);
 	    }
 	    //  */
-
+	    /*
+	    Baader ontooo = new Baader();
+	    int reps = 30000;
+	    if (trace) System.out.println("reps: " + reps);
+	    runTests(ontooo, 2000); // warm up
+	    for ( int k = 1; k <= 1; k+=100) {
+		long t0 = System.currentTimeMillis();
+		runSmallFailTests(ontooo, reps);
+		long delta = System.currentTimeMillis() - t0;
+		System.out.println("delta timing: " + delta);
+	    }
+	    // */ 
 	}
     } // end of main
     static private void gen1(Baader ontooo, int size, int reps) {
@@ -485,6 +576,160 @@ public class ZTestBaader {
 	}
     } //  runTests
 
+    static private void runSmallFailTests(Baader ontooo, int repeat) {
+	String a, b;
+	for ( int i = 0; i < repeat; i++ ) {
+	    // small set
+	    // time ratio 8 -> 1.21 -> // 1.077
+	    // 9 -> 1.072
+	    for ( int j = 9; j <= 9; j++) gen1f(ontooo, j, 3); 
+	    for ( int j = 9; j <= 9; j++) gen2f(ontooo, j, 2); 
+	    for ( int j = 9; j <= 9; j++) gen3f(ontooo, j, 3);
+	    for ( int j = 9; j <= 9; j++) gen4f(ontooo, j, 3);
+	    /*
+	    ontooo.clear();
+	    a = "P(a)"; b = "P(f(a))";
+	    Vector out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(a b)"; b = "P(f(b) b)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(f(a))";  b = "P(g(a))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(a)"; b = "P(b)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(a)"; b = "Q(a)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x)"; b = "P(f(?x))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y) ?z ?x)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?x)"; b = "P(f(g(?z)) ?z))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?x)"; b = "P(a f(b))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?x)"; b = "P(a b)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?x)"; b = "P(a b ?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?x)";  b = "P(f(a) f(b))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x g(f(?x)))"; b = "P(f(?y) ?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?y)"; b = "P(a ?x b)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x g(?x))";  b = "P(f(?y) ?y)"; 
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x h(?z) f(?x))";  b = "P(g(?y) ?y ?z)"; 
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    b = "P(?x h(?z) f(?x))";  a = "P(g(?y) ?y ?z)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(a)"; b = "P(a)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(f(a))"; b = "P(f(a))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x)"; b = "P(a)"; 
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x)"; b = "P(?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x)"; b = "P(?x)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x)"; b = "P(f(?y))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x a)";  b = "P(a ?x)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(f(?x))"; b = "P(f(a))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x f(?y))"; b = "P(f(?y) f(f(?z)))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y ?z) ?z ?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)";  b = "P(f(?y ?z) a ?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(a ?x f(a ?x))"; b = "P(?y g(?y) f(?z g(?z)))"; 
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x)";  b = "P(f(?x))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?x)"; b = "P(a b))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x b)"; b = "P(a ?x))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y)"; b = "P(a b)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?x)";  b = "P(a b)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?x)";  b = "P(f(?y) ?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y)"; b = "P(f(?y) ?x)"; 
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y) ?z ?x)"; 
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y ?z) f(?x ?z) f(?x ?y))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y ?z) f(?x ?z) f(?x ?y))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y ?z) ?z ?y)"; 
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y ?z) a ?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(a ?x b)"; b = "P(?x ?y ?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?z ?y)"; b = "P(f(?z)?y ?x)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)";  b = "P(?y ?z ?v)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(?y ?z a)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(?y ?z f(x))";
+	    out = ontooo.unify(a, b);
+	    */
+	}
+    } // end runSmallFailTests
+
+
      // Generators of arguments that causes normally exponential blow up 
      static public String gen1arg1(int n) { return ZGen.gen1arg1(n); }
      static public String gen1arg1f(int n) { return ZGen.gen1arg1f(n); }
@@ -507,8 +752,8 @@ class Baader {
 	htv = new Hashtable();
 	sigma = new Vector();
     }
-    private static boolean trace = false;  // reset as needed
-    // private static Boolean trace = true; 
+    // private static boolean trace = false;  // reset as needed
+    private static Boolean trace = true; 
 
     Parser parser = new Parser(false);
     private String arg1;
@@ -617,8 +862,11 @@ class Baader {
     } // end bunify
 
     private boolean unifClosure(Node s, Node t) {
+	// ZTestBaader.cntf++; // complexity counter
 	if ( trace ) 
 	    System.out.println("       unifClosure s: " + s.html() + " t: " + t.html());
+	// if ( (t instanceof VariableNode) && !(s instanceof VariableNode) )
+	//     return unifClosure(t, s);
 	s = s.find(); // get representative 
 	t = t.find();
 	if ( trace ) 
@@ -692,7 +940,14 @@ class Baader {
 	return true;
     } // end unifClosure
 
+    /* This version of union differs from the description in the 2001 publication.
+       When only one of the arguments is a varible and it is in 2nd position 
+       its attributes will be set as if it would be in the 1st position.
+     */ 
     private void union(Node s, Node t) {
+       	// if ( (t instanceof VariableNode) && !(s instanceof VariableNode) ) {
+	//     Node z = s; s = t; t = z; // exchange them
+	// }
 	int sizeS = s.getSize(), sizeT = t.getSize();
 	if ( trace ) {
 	    System.out.println("    union s: " +
@@ -715,8 +970,16 @@ class Baader {
 		    hs.add(x);
 		}
 	    }
-	    if ( (s.getSchema()) instanceof VariableNode ) s.setSchema(t.getSchema());
-	    t.setMyClass(s); 
+	    if ( (s instanceof VariableNode) ) {
+		if ( (s.getSchema()) instanceof VariableNode ) { 
+		    s.setSchema(t.getSchema()); t.setMyClass(s); 
+		} 
+	    } else  {
+		if ( (t.getSchema()) instanceof VariableNode ) { 
+		    t.setSchema(s.getSchema()); s.setMyClass(t);  
+		} else 
+		    t.setMyClass(s); 
+	    }
 	} else { 
 	    t.setSize(sizeS + sizeT);
 	    if ( (s instanceof VariableNode) && (t instanceof VariableNode) ) {
@@ -727,8 +990,16 @@ class Baader {
 		    ht.add(x);
 		}
 	    }
-	    if ( (t.getSchema()) instanceof VariableNode ) t.setSchema(s.getSchema());
-	    s.setMyClass(t); 
+	    if ( (t instanceof VariableNode) ) {
+		if ( (t.getSchema()) instanceof VariableNode ) {
+		    t.setSchema(s.getSchema()); s.setMyClass(t); 
+		} 
+	    } else {
+		    if ( (s.getSchema()) instanceof VariableNode ) { 
+			s.setSchema(t.getSchema()); s.setMyClass(t); 
+		    } else 
+			s.setMyClass(t); 
+	    }
 	}
 	if ( trace ) { 
 	    System.out.println("union exit s: " +
@@ -742,6 +1013,7 @@ class Baader {
 	    	       " t: " + t.getSchema().html() );
 	}
     } // end union
+       
 
     private boolean findSolution(Node s1) {
 	ZTestBaader.cntf++; // complexity counter
@@ -906,7 +1178,7 @@ abstract class Node {
 	    myClass = myClass.find();
 	}
 	return myClass;
-    }
+    } // end find
     abstract String string();
     abstract String html(); 
 

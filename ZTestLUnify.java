@@ -84,15 +84,25 @@ public class ZTestLUnify {
 	    // String a = "P(?x f(?y))";  String b = "P(f(?y) f(f(?z)))"; // test post
 	    // String a = "P(a ?x f(a ?x))"; String b = "P(?y g(?y) f(?z g(?z)))"; // text
 
-	    // String a = "P(?x ?y ?z)"; String b = "P(?y ?z ?v)"; // ok
+	    String a = "P(?x ?y ?z)"; String b = "P(?y ?z ?v)"; // ok
 
-	    /*
+	    // /*
 	    LunificationContext luc = new LunificationContext();
 	    Vector out = luc.unify(a, b);
 	    //  + " fcnt: " + luc.getFcnt());
 	    System.out.println("--------------\nout: Unification " +
 			       ( null == out ? "failed" : "ok" ) );
 	    // */
+	    /*
+	    long t0 = System.currentTimeMillis();
+	    for ( int j = 0; j < 20; j++) {
+		LunificationContext luc = new LunificationContext();
+		Vector out = luc.unify(a, b);
+	    }
+	    long delta = System.currentTimeMillis() - t0;
+	    System.out.println("Example i: " + i + " delta timing: " + delta/(1.0*20));
+	    //	    */
+
 	    /*
 	    LunificationContext luc = new LunificationContext();
 	    runTests(luc, 2000); // warm up
@@ -163,9 +173,11 @@ public class ZTestLUnify {
 
 	    // */
 
-	    // /*
+	    // LunificationContext ontooo = new LunificationContext();
+
+	    /*
 	    // size base test
-	    LunificationContext ontooo = new LunificationContext();
+	    // LunificationContext ontooo = new LunificationContext();
 	    runTests(ontooo, 2000); // warm up
 	    for ( int k = 100; k <= 1000; k+=100) { // gen1/f
 	    // for ( int k = 200; k <= 200; k+=100) { // gen2/f
@@ -188,7 +200,7 @@ public class ZTestLUnify {
 	    // */
 
 	    /*
-	    LunificationContext ontooo = new LunificationContext();
+	    // LunificationContext ontooo = new LunificationContext();
 	    int reps = 30000;
 	    if (trace) System.out.println("reps: " + reps);
 	    runTests(ontooo, 2000); // warm up
@@ -200,12 +212,111 @@ public class ZTestLUnify {
 	    }
 	    // */
 	    /*
-	    long t0 = System.currentTimeMillis();
-	    for ( int j = 0; j < 20; j++) {
-		LunificationContext luc = new LunificationContext();
-		Vector out = luc.unify(a, b);
+	    // SMALL size base tests OK
+	    LunificationContext ontooo = new LunificationContext();
+	    {
+	    runTests(ontooo, 2000); // warm up
+	    int reps = 5000;
+	    System.out.println("SMALL size base tests OK/ reps:" + reps);
+	    for ( int k = 1; k <= 6; k++) {
+		int begin = 0;
+		int reps2 = 500;
+		float best = 100000;
+		while ( begin < reps ) {
+		    long t0 = System.currentTimeMillis();
+		    gen1(ontooo, k, reps2);
+		    gen2(ontooo, k, reps2);
+		    gen3(ontooo, k, reps2);
+		    gen4(ontooo, k, reps2);
+		    long delta = System.currentTimeMillis() - t0;
+		    if ( delta < best ) {
+			// System.out.println("delta: " + delta + " best: " + best);
+			best = delta;
+		    }
+		    begin = begin + reps2;
+		}
+		System.out.println("gen1-4 k: " + k + " timing: " + 
+				   String.format("%.5f", ((1.0/ (4*reps2)) * best)));
 	    }
-	    */
+	    }
+	    //	*/
+	    /*
+	    {
+	    // SMALL size base tests fail
+	    // LunificationContext ontooo = new LunificationContext();
+	    runTests(ontooo, 2000); // warm up
+	    int reps = 5000;
+	    System.out.println("SMALL size base tests fail/ reps:" + reps);
+	    for ( int k = 1; k <= 6; k++) {
+		int begin = 0;
+		int reps2 = 500;
+		float best = 100000;
+		while ( begin < reps ) {
+		    long t0 = System.currentTimeMillis();
+		    gen1f(ontooo, k, reps2);
+		    gen2f(ontooo, k, reps2);
+		    gen3f(ontooo, k, reps2);
+		    gen4f(ontooo, k, reps2);
+		    long delta = System.currentTimeMillis() - t0;
+		    if ( delta < best ) {
+			// System.out.println("delta: " + delta + " best: " + best);
+			best = delta;
+		    }
+		    begin = begin + reps2;
+		}
+		System.out.println("gen1-4 k: " + k + " timing: " + 
+				   String.format("%.5f", ((1.0/ (4*reps2)) * best)));
+	    }
+	    }
+	    // */
+	    /*
+	    {
+	    // Large size base tests OK&fail
+	    runTests(ontooo, 2000); // warm up
+	    int reps = 5000;
+	    System.out.println("Large size base tests OK&fail reps:" + reps);
+	    for ( int k = 5; k <= 50; k = k*2) {
+		// { int k = 40;
+		int begin = 0;
+		int reps2 = 500;
+		float best = 100000;
+		while ( begin < reps ) {
+		    long t0 = System.currentTimeMillis();
+		    gen1(ontooo, k, reps2);
+		    gen1f(ontooo, k, reps2);
+		    gen2(ontooo, k, reps2);
+		    gen2f(ontooo, k, reps2);
+		    gen3(ontooo, k, reps2);
+		    gen3f(ontooo, k, reps2);
+		    gen4(ontooo, k, reps2);
+		    gen4f(ontooo, k, reps2);
+		    long delta = System.currentTimeMillis() - t0;
+		    if ( delta < best ) {
+			// System.out.println("delta: " + delta + " best: " + best);
+			best = delta;
+		    }
+		    begin = begin + reps2;
+		}
+		System.out.println("gen1-4 k: " + k + " delta timing: " + 
+				   String.format("%.5f", ((1.0/ (8*reps2)) * best)));
+		// reps = reps/2;
+	    }
+	    }
+
+	    /*
+	    LunificationContext ontooo = new LunificationContext();
+	    int reps = 30000;
+	    if (trace) System.out.println("reps: " + reps);
+	    runTests(ontooo, 2000); // warm up
+	    for ( int k = 1; k <= 1; k+=100) {
+		long t0 = System.currentTimeMillis();
+		runSmallFailTests(ontooo, reps);
+		long delta = System.currentTimeMillis() - t0;
+		System.out.println("delta timing: " + delta);
+	    }
+	    // */ 
+
+
 	}
     } // end of main
     static private void gen1(LunificationContext ontooo, int size, int reps) {
@@ -468,6 +579,160 @@ public class ZTestLUnify {
 	}
     } // end runTests
 
+    static private void runSmallFailTests(LunificationContext ontooo, int repeat) {
+	String a, b;
+	for ( int i = 0; i < repeat; i++ ) {
+	    // small set
+	    // time ratio 8 -> 1.21 -> // 1.077
+	    // 9 -> 1.072
+	    for ( int j = 9; j <= 9; j++) gen1f(ontooo, j, 3); 
+	    for ( int j = 9; j <= 9; j++) gen2f(ontooo, j, 2); 
+	    for ( int j = 9; j <= 9; j++) gen3f(ontooo, j, 3);
+	    for ( int j = 9; j <= 9; j++) gen4f(ontooo, j, 3);
+	    /*
+	    ontooo.clear();
+	    a = "P(a)"; b = "P(f(a))";
+	    Vector out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(a b)"; b = "P(f(b) b)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(f(a))";  b = "P(g(a))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(a)"; b = "P(b)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(a)"; b = "Q(a)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x)"; b = "P(f(?x))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y) ?z ?x)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?x)"; b = "P(f(g(?z)) ?z))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?x)"; b = "P(a f(b))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?x)"; b = "P(a b)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?x)"; b = "P(a b ?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?x)";  b = "P(f(a) f(b))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x g(f(?x)))"; b = "P(f(?y) ?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?y)"; b = "P(a ?x b)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x g(?x))";  b = "P(f(?y) ?y)"; 
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x h(?z) f(?x))";  b = "P(g(?y) ?y ?z)"; 
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    b = "P(?x h(?z) f(?x))";  a = "P(g(?y) ?y ?z)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(a)"; b = "P(a)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(f(a))"; b = "P(f(a))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x)"; b = "P(a)"; 
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x)"; b = "P(?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x)"; b = "P(?x)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x)"; b = "P(f(?y))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x a)";  b = "P(a ?x)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(f(?x))"; b = "P(f(a))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x f(?y))"; b = "P(f(?y) f(f(?z)))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y ?z) ?z ?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)";  b = "P(f(?y ?z) a ?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(a ?x f(a ?x))"; b = "P(?y g(?y) f(?z g(?z)))"; 
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x)";  b = "P(f(?x))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?x)"; b = "P(a b))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x b)"; b = "P(a ?x))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y)"; b = "P(a b)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?x)";  b = "P(a b)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?x)";  b = "P(f(?y) ?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y)"; b = "P(f(?y) ?x)"; 
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y) ?z ?x)"; 
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y ?z) f(?x ?z) f(?x ?y))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y ?z) f(?x ?z) f(?x ?y))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y ?z) ?z ?y)"; 
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y ?z) a ?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(a ?x b)"; b = "P(?x ?y ?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?z ?y)"; b = "P(f(?z)?y ?x)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)";  b = "P(?y ?z ?v)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(?y ?z a)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(?y ?z f(x))";
+	    out = ontooo.unify(a, b);
+	    */
+	}
+    } // end runSmallFailTests
+
+
      // Generator of 1st argument that causes normally exponential blow up 
      static public String gen1arg1(int n) { return ZGen.gen1arg1(n); }
      static public String gen1arg1f(int n) { return ZGen.gen1arg1f(n); }
@@ -485,8 +750,8 @@ public class ZTestLUnify {
 } // end class ZTestLUnify
 
 abstract class Layer {
-    protected static final Boolean trace = false;  // reset as needed
-    // protected static final Boolean trace = true;  // reset as needed
+    // protected static final Boolean trace = false;  // reset as needed
+    protected static final Boolean trace = true;  // reset as needed
     // intrastructure for a layer
     private Vector parents = new Vector(); // for up refs
     public Vector getParents() { return parents; }
@@ -668,8 +933,8 @@ class LunificationContext {
     }
     // private int fcnt = 0; // for tracing
     // public int getFcnt() { return fcnt; }
-    private static Boolean trace = false;  // reset as needed
-    // private static Boolean trace = true; 
+    // private static Boolean trace = false;  // reset as needed
+    private static Boolean trace = true; 
     Parser parser = new Parser(false);
     private String arg1;
     private String arg2;
@@ -838,8 +1103,8 @@ class LunificationContext {
     public boolean finish(int cnt, Layer r) { 
 	ZTestLUnify.cntf++;
 	// fcnt++;
-	// boolean trace = true;  // reset as needed
-	boolean trace = false;  // reset as needed
+	boolean trace = true;  // reset as needed
+	// boolean trace = false;  // reset as needed
 	if ( trace ) {
 	    indent(cnt); System.out.println("Finish: r: " + cnt + " " + r.html()); }
 	if ( r.getComplete() ) { // completed already
@@ -992,7 +1257,7 @@ class LunificationContext {
 	for ( int i = cnt; 0 < i; i-- ) System.out.print("       ");
     }
 
-    // Post processing here for producing an ordered substitiution
+    // Post processing here for producing a non-ordered substitiution
     // The variable must not be contained in its val - obviously
     public Vector buildSigma(Vector vnodes) { // 
 	Vector out = new Vector();

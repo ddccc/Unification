@@ -24,6 +24,8 @@ pairs, groups of pairs, individual generators for pairs, groups of
 generators and other combinations.  The drivers contain 'trace'
 parameters that can be turned on/off.
 
+The eight generators for argument pairs are in the file ZGen.
+
 The file LinUnify.pdf has a description of these unification versions.
 
 Installation

@@ -237,7 +237,7 @@ public class Atom extends Formula {
 	Term term = var.getValue();
 	if (trace) 
 	    System.out.println("--------## var: " + var.html() + 
-			       "term: " +term.html());
+			       "term: " + term.html());
 	HashSet termVariables = term.getVariables();
 	int lng = out.size();
 	for ( int i = 0; i < lng; i++ ) {
@@ -245,6 +245,7 @@ public class Atom extends Formula {
 	    if (trace) System.out.println("sub: " + sub.html());
 	    Variable vari = sub.getVariable();
 	    if ( null != termVariables && termVariables.contains(vari) ) { 
+		// replace in term vari variables 
 		term = (Term) term.subst(vari, sub.getTerm());
 		termVariables.remove(vari);
 		continue;
@@ -252,8 +253,11 @@ public class Atom extends Formula {
 	    if (trace) System.out.println("term: " + term.html());
 	    Term term2 = sub.getTerm();
 	    HashSet term2Variables = term2.getVariables();
-	    if ( null != term2Variables && term2Variables.contains(var) ) 
+	    if ( null != term2Variables && term2Variables.contains(var) )  {
+		// replace in term2 var variables 
 		sub.setTerm((Term)term2.subst(var, term));
+	    }
+	    if (trace) System.out.println();
 	}
 	Substitution subNew = new Substitution(var, term);
 	if (trace) System.out.println("##: " + subNew.html());

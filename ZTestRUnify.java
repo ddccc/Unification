@@ -14,8 +14,8 @@ public class ZTestRUnify {
 	for (int i = 1; i <= 1; i++) {	
 	// for (int i = 1; i <= 2; i++) {
 	// for (int i = 1; i <= 7; i++) {
-	    // for (int i = 1000; i <= 2000; i = i+100) {
-	    // for (int i = 10; i <= 18; i++) {
+	// for (int i = 1000; i <= 2000; i = i+100) {
+	// for (int i = 10; i <= 18; i++) {
 	    // for (int i = 100; i <= 300; i = i+10) {
 	    // System.out.println("size: " + i);
 	    // String a = gen1arg1(i);
@@ -63,13 +63,13 @@ public class ZTestRUnify {
  	    // String a = "P(f(?x))";  String b = "P(f(a))"; 
 
 	    // String a = "P(?x f(?y))";  String b = "P(f(?y) f(f(?z)))"; // test post
-	    // String a = "P(a ?x f(a ?x))"; String b = "P(?y g(?y) f(?z g(?z)))"; // text
+	    // String a = "P(a ?x f(a ?x))"; String b = "P(?y g(?y) f(?z g(?z)))"; // text !!!
 
 	    // String a = "P(?x ?x)"; String b = "P(f(b) f(a))";
 
 	    // System.out.println("a: " + a); System.out.println("b: " + b);
 
-	    // /*
+	    /*
 	    int reps = 30000;
 	    if (trace) System.out.println("reps: " + reps);
 	    runTests(parser, 2000); // warm up
@@ -80,6 +80,77 @@ public class ZTestRUnify {
 		System.out.println("Example i: " + i + " delta timing: " + delta);
 	    }
 	    // */
+
+	    /*
+	    // SMALL size base tests OK
+	    {
+	    runTests(parser, 2000); // warm up
+	    int reps = 5000;
+	    System.out.println("SMALL size base tests OK reps:" + reps);
+	    for ( int k = 1; k <= 6; k++) {
+		// if ( 6 == k ) continue;
+		int begin = 0;
+		int reps2 = 500;
+		float best = 100000;
+		while ( begin < reps ) {
+		    long t0 = System.currentTimeMillis();
+		    gen1(parser, k, reps2);
+		    gen2(parser, k, reps2);
+		    gen3(parser, k, reps2);
+		    gen4(parser, k, reps2);
+		    long delta = System.currentTimeMillis() - t0;
+		    if ( delta < best ) {
+			// System.out.println("delta: " + delta + " best: " + best);
+			best = delta;
+		    }
+		    begin = begin + reps2;
+		}
+
+		System.out.println("gen1-4 k: " + k + " timing: " + 
+				   String.format("%.5f", ((1.0/ (4*reps2)) * best)));
+	    }
+	    }
+	    // */
+	    // /*
+	    // SMALL size base tests fail
+	    {
+	    runTests(parser, 2000); // warm up
+	    int reps = 5000;
+	    System.out.println("SMALL size base tests fail reps:" + reps);
+	    for ( int k = 1; k <= 6; k++) {
+		int begin = 0;
+		int reps2 = 500;
+		float best = 100000;
+		while ( begin < reps ) {
+		    long t0 = System.currentTimeMillis();
+		    gen1f(parser, k, reps2);
+		    gen2f(parser, k, reps2);
+		    gen3f(parser, k, reps2);
+		    gen4f(parser, k, reps2);
+		    long delta = System.currentTimeMillis() - t0;
+		    if ( delta < best ) {
+			// System.out.println("delta: " + delta + " best: " + best);
+			best = delta;
+		    }
+		    begin = begin + reps2;
+		}
+		System.out.println("gen1-4 k: " + k + " timing: " + 
+				   String.format("%.5f", ((1.0/ (4*reps2)) * best)));
+	    }
+	    }
+	    // */
+
+	    /*
+	    int reps = 30000;
+	    if (trace) System.out.println("reps: " + reps);
+	    runTests(parser, 2000); // warm up
+	    for ( int k = 1; k <= 1; k+=100) {
+		long t0 = System.currentTimeMillis();
+		runSmallFailTests(parser, reps);
+		long delta = System.currentTimeMillis() - t0;
+		System.out.println("delta timing: " + delta);
+	    }
+	    */
 	    /*
 	    // alternative way to run a-b pairs
 	    System.out.println("======================================");
@@ -487,6 +558,166 @@ public class ZTestRUnify {
 	    clear();
 	}
     } //  runTests
+
+     static private void runSmallFailTests(Parser parser, int repeat) {
+	String a, b;
+	for ( int i = 0; i < repeat; i++ ) {
+
+	    // small set
+	    for ( int j = 2; j <= 2; j++) gen1(parser, j, 3); 
+	    for ( int j = 2; j <= 2; j++) gen2(parser, j, 2); 
+	    for ( int j = 2; j <= 2; j++) gen3(parser, j, 3);
+	    for ( int j = 2; j <= 2; j++) gen4(parser, j, 3);
+
+	    /*
+	    // small set
+	    for ( int j = 2; j <= 2; j++) gen1f(parser, j, 3); 
+	    for ( int j = 2; j <= 2; j++) gen2f(parser, j, 2); 
+	    for ( int j = 2; j <= 2; j++) gen3f(parser, j, 3);
+	    for ( int j = 2; j <= 2; j++) gen4f(parser, j, 3);
+
+	    clear();
+	    a = "P(a)"; b = "P(f(a))";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(a b)"; b = "P(f(b) b)";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(f(a))";  b = "P(g(a))";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(a)"; b = "P(b)";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(a)"; b = "Q(a)";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x)"; b = "P(f(?x))";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y) ?z ?x)";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x ?x)"; b = "P(f(g(?z)) ?z))";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x ?x)"; b = "P(a f(b))";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x ?x)"; b = "P(a b)";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x ?y ?x)"; b = "P(a b ?y)";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x ?x)";  b = "P(f(a) f(b))";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x g(f(?x)))"; b = "P(f(?y) ?y)";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x ?y ?y)"; b = "P(a ?x b)";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x g(?x))";  b = "P(f(?y) ?y)"; 
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x h(?z) f(?x))";  b = "P(g(?y) ?y ?z)"; 
+	    unifyR(parser, a, b);
+	    clear();
+	    b = "P(?x h(?z) f(?x))";  a = "P(g(?y) ?y ?z)";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(a)"; b = "P(a)";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(f(a))"; b = "P(f(a))";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x)"; b = "P(a)"; 
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x)"; b = "P(?y)";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x)"; b = "P(?x)";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x)"; b = "P(f(?y))";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x a)";  b = "P(a ?x)";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(f(?x))"; b = "P(f(a))";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x f(?y))"; b = "P(f(?y) f(f(?z)))";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y ?z) ?z ?y)";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x ?y ?z)";  b = "P(f(?y ?z) a ?y)";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(a ?x f(a ?x))"; b = "P(?y g(?y) f(?z g(?z)))"; 
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x)";  b = "P(f(?x))";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x ?x)"; b = "P(a b))";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x b)"; b = "P(a ?x))";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x ?y)"; b = "P(a b)";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x ?x)";  b = "P(a b)";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x ?x)";  b = "P(f(?y) ?y)";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x ?y)"; b = "P(f(?y) ?x)"; 
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y) ?z ?x)"; 
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y ?z) f(?x ?z) f(?x ?y))";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y ?z) f(?x ?z) f(?x ?y))";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y ?z) ?z ?y)"; 
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y ?z) a ?y)";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(a ?x b)"; b = "P(?x ?y ?y)";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x ?z ?y)"; b = "P(f(?z)?y ?x)";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x ?y ?z)";  b = "P(?y ?z ?v)";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x ?y ?z)"; b = "P(?y ?z a)";
+	    unifyR(parser, a, b);
+	    clear();
+	    a = "P(?x ?y ?z)"; b = "P(?y ?z f(x))";
+	    unifyR(parser, a, b);
+	    */
+	}
+     } // end runSmallFailTests
+
 
     static public void unifyR(Parser parser, String a, String b) {
 	Atom a1 = parseIt(parser, a); Atom b1 = parseIt(parser, b); 

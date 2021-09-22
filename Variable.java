@@ -50,4 +50,28 @@ public class Variable extends Symbol {
     public void setValue(Term term) { value = term; }
 
     public String html() { return "?" + super.html(); }
-}
+
+    // additions for DC 2021 August
+    //  String getName() is inherited from Symbol
+    private Term first = null;
+    public Term getFirst() { return first; }
+    public void setFirst(Term t) { first = t; }
+    public boolean isRoot() { return (null != first); }
+    // if variables != null then first != null and contains a variable or more
+    protected HashSet variables = null;
+
+    private int size = 1;
+    public int getSize() { return size; }
+    public void setSize(int s) { size = s; }
+
+    protected boolean isVroot = true; 
+    protected Variable myVroot = null;
+
+    protected boolean checking = false;
+    protected boolean checked = false;
+
+    private Term l2 = null; // for post processing
+    public void setL2(Term lx) { l2 = lx; }
+    public Term ready() { return l2; }
+
+} // end Variable

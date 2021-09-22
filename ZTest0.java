@@ -6,7 +6,7 @@ Still may need more work.
 The control flow:
 dunify -> unif
 unif -> unif2 & unif3
-unif2 -> unif4 -> unif2
+unif2 -> unif4 -> unif
 unif3 -> unif5
  */
 
@@ -28,13 +28,14 @@ public class ZTest0 {
 	// for (int i = 1500; i <= 1510; i++) {
 	// for (int i = 1500; i <= 1510; i++) {
 	// for (int i = 10; i <= 20; i++) {
-	for (int i = 1; i <= 1; i++) {
+	// for (int i = 1; i <= 1; i++) {
+	for (int i = 2; i <= 2; i++) {
 	// for (int i = 1; i <= 7; i++) {
 	// for (int i = 1; i <= 3; i++) {
 	// for (int i = 3; i <= 5; i++) {
 	    // if (trace) System.out.println("size: " + i);
-	    // String a = gen1arg1(i); // generator succeeds
-	    // String b = gen1arg2(i); // generator
+	    String a = gen1arg1(i); // generator succeeds
+	    String b = gen1arg2(i); // generator
 	    // String a = gen1arg1f(i); // generator fail
 	    // String a = gen2arg1(i); // generator
 	    // String b = gen2arg2(i); // generator
@@ -49,12 +50,15 @@ public class ZTest0 {
 	    // System.out.println("b: " + b);
 	    // ad hoc exmples if the generor is not used:
 	    //     not unifiable
+
 	    // String a = "P(a)";  String b = "P(f(a))"; // disjoint classes zz3 unif4
 	    // String a = "P(a b)";  String b = "P(f(b) b)"; // incompatible arguments unif4
 	    // String a = "P(f(a))";  String b = "P(g(a))";  // function match failure unif4
 	    // String a = "P(a)";  String b = "P(b)";        // constant match failure unif4
 	    // String a = "P(a)";  String b = "Q(a)";        // predicate match failure 
 	    // String a = "P(?x)";  String b = "P(f(?x))"; // - unif2G
+	    // String a = "P(?t ?s)";  String b = "P(f(?s) ?t)"; // -unif2G
+	    // String a = "P(?t ?t ?s)";  String b = "P(?s f(?s) g(?t))"; // -unif2A
 	    // String a = "P(?x ?y ?z)";  String b = "P(f(?y) ?z ?x)"; // - unif5 check3
 	    // String a = "P(?x ?x)";  String b = "P(f(g(?z)) ?z))"; // - unif5 check3
 	    // String a = "P(?x ?x)";  String b = "P(a f(b))"; // - unif4
@@ -118,7 +122,7 @@ public class ZTest0 {
 
 	    Ontooo ontooo = new Ontooo();
 
-	    /*
+	    // /*
 	    Vector out = ontooo.unify(a, b);
 	    System.out.println("--------------\nout: Unification " +
 	    	       ( null == out ? "failed" : "ok" ) );
@@ -179,7 +183,7 @@ public class ZTest0 {
 	    System.out.println("gen4  k:  " + k + " delta timing: " +
 			       String.format("%.2f", ((1.0/ reps) * delta)));
 	    t0 = System.currentTimeMillis();
-	    gen3f(ontooo, k, reps);
+	    gen4f(ontooo, k, reps);
 	    delta = System.currentTimeMillis() - t0;
 	    System.out.println("gen4f k:  " + k + " delta timing: " +
 			       String.format("%.2f", ((1.0/ reps) * delta)));
@@ -187,29 +191,96 @@ public class ZTest0 {
 	    System.out.println();
 	    // */
 
-	    // /*
-	    // size base tests
+	    /*
+	    // SMALL size base tests OK/
+	    {
 	    runTests(ontooo, 2000); // warm up
-	    for ( int k = 100; k <= 1000; k+=100) { // gen1/f
-	    // for ( int k = 200; k <= 200; k+=100) { // gen2/f
-	    // for ( int k = 600; k <= 600; k+=100) { // gen3
-		cnt = 0;
-		long t0 = System.currentTimeMillis();
-		int reps = 400;
-		// gen1(ontooo, k, reps);
-	        gen1f(ontooo, k, reps);
-		// gen2(ontooo, k, reps);
-	        // gen2f(ontooo, k, reps);
-		// gen3(ontooo, k, reps);
-		// gen3f(ontooo, k, reps);
-		// add more here based on:
-		long delta = System.currentTimeMillis() - t0;
-		System.out.println("Example k: " + k + " delta timing: " + 
-				   String.format("%.2f", ((1.0/ reps) * delta)) +
-				   " cnt: " + (cnt/reps));
+	    int reps = 5000;
+	    System.out.println("SMALL size base tests OK/ reps:" + reps);
+	    for ( int k = 1; k <= 6; k++) {
+		int begin = 0;
+		int reps2 = 500;
+		float best = 100000;
+		while ( begin < reps ) {
+		    long t0 = System.currentTimeMillis();
+		    gen1(ontooo, k, reps2);
+		    gen2(ontooo, k, reps2);
+		    gen3(ontooo, k, reps2);
+		    gen4(ontooo, k, reps2);
+		    long delta = System.currentTimeMillis() - t0;
+		    if ( delta < best ) {
+			// System.out.println("delta: " + delta + " best: " + best);
+			best = delta;
+		    }
+		    begin = begin + reps2;
+		}
+		System.out.println("gen1-4 k: " + k + " timing: " + 
+				   String.format("%.5f", ((1.0/ (4*reps2)) * best)));
+	    }
 	    }
 	    // */
-
+	    /*
+	    // SMALL size base tests fail
+	    {
+	    runTests(ontooo, 2000); // warm up
+	    int reps = 5000;
+	    System.out.println("SMALL size base tests fail reps:" + reps);
+	    for ( int k = 1; k <= 6; k++) {
+		int begin = 0;
+		int reps2 = 500;
+		float best = 100000;
+		while ( begin < reps ) {
+		    long t0 = System.currentTimeMillis();
+		    gen1f(ontooo, k, reps2);
+		    gen2f(ontooo, k, reps2);
+		    gen3f(ontooo, k, reps2);
+		    gen4f(ontooo, k, reps2);
+		    long delta = System.currentTimeMillis() - t0;
+		    if ( delta < best ) {
+			// System.out.println("delta: " + delta + " best: " + best);
+			best = delta;
+		    }
+		    begin = begin + reps2;
+		}
+		System.out.println("gen1-4 k: " + k + " delta timing: " + 
+				   String.format("%.5f", ((1.0/ (4*reps2)) * best)));
+	    }
+	    }
+	    // */
+	    /*
+	    // Large size base tests OK&fail
+	    {
+	    runTests(ontooo, 2000); // warm up
+	    int reps = 5000;
+	    System.out.println("Large size base tests OK&fail reps:" + reps);
+	    for ( int k = 5; k <= 50; k = k*2) {
+		// { int k = 40;
+		int begin = 0;
+		int reps2 = 500;
+		float best = 100000;
+		while ( begin < reps ) {
+		    long t0 = System.currentTimeMillis();
+		    gen1(ontooo, k, reps2);
+		    gen1f(ontooo, k, reps2);
+		    gen2(ontooo, k, reps2);
+		    gen2f(ontooo, k, reps2);
+		    gen3(ontooo, k, reps2);
+		    gen3f(ontooo, k, reps2);
+		    gen4(ontooo, k, reps2);
+		    gen4f(ontooo, k, reps2);
+		    long delta = System.currentTimeMillis() - t0;
+		    if ( delta < best ) {
+			// System.out.println("delta: " + delta + " best: " + best);
+			best = delta;
+		    }
+		    begin = begin + reps2;
+		}
+		System.out.println("gen1-4 k: " + k + " delta timing: " + 
+				   String.format("%.5f", ((1.0/ (8*reps2)) * best)));
+		// reps = reps/2;
+	    }
+	    }
+	    // */
 	    /*
 	    int reps = 30000;
 	    if (trace) System.out.println("reps: " + reps);
@@ -221,7 +292,17 @@ public class ZTest0 {
 		System.out.println("delta timing: " + delta);
 	    }
 	    // */
-
+	    /*
+	    int reps = 30000;
+	    if (trace) System.out.println("reps: " + reps);
+	    runTests(ontooo, 2000); // warm up
+	    for ( int k = 1; k <= 1; k+=100) {
+		long t0 = System.currentTimeMillis();
+		runSmallFailTests(ontooo, reps);
+		long delta = System.currentTimeMillis() - t0;
+		System.out.println("delta timing: " + delta);
+	    }
+	    // */ 
 	    // showPairs();
 	}
     } // end of main
@@ -613,6 +694,164 @@ public class ZTest0 {
 	}
     } //  runTests
 
+    static private void runSmallFailTests(Ontooo ontooo, int repeat) {
+	String a, b;
+	for ( int i = 0; i < repeat; i++ ) {
+	    // small set
+	    // time ratio 7 -> 1.21 -> // 1.077
+	    // 6 -> 1.061
+	    for ( int j = 2; j <= 2; j++) gen1(ontooo, j, 3); 
+	    for ( int j = 2; j <= 2; j++) gen2(ontooo, j, 2); 
+	    for ( int j = 2; j <= 2; j++) gen3(ontooo, j, 3);
+	    for ( int j = 2; j <= 2; j++) gen4(ontooo, j, 3);
+	    /*
+	    for ( int j = 2; j <= 2; j++) gen1f(ontooo, j, 3); 
+	    for ( int j = 2; j <= 2; j++) gen2f(ontooo, j, 2); 
+	    for ( int j = 2; j <= 2; j++) gen3f(ontooo, j, 3);
+	    for ( int j = 2; j <= 2; j++) gen4f(ontooo, j, 3);
+
+	    ontooo.clear();
+	    a = "P(a)"; b = "P(f(a))";
+	    Vector out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(a b)"; b = "P(f(b) b)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(f(a))";  b = "P(g(a))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(a)"; b = "P(b)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(a)"; b = "Q(a)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x)"; b = "P(f(?x))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y) ?z ?x)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?x)"; b = "P(f(g(?z)) ?z))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?x)"; b = "P(a f(b))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?x)"; b = "P(a b)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?x)"; b = "P(a b ?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?x)";  b = "P(f(a) f(b))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x g(f(?x)))"; b = "P(f(?y) ?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?y)"; b = "P(a ?x b)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x g(?x))";  b = "P(f(?y) ?y)"; 
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x h(?z) f(?x))";  b = "P(g(?y) ?y ?z)"; 
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    b = "P(?x h(?z) f(?x))";  a = "P(g(?y) ?y ?z)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(a)"; b = "P(a)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(f(a))"; b = "P(f(a))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x)"; b = "P(a)"; 
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x)"; b = "P(?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x)"; b = "P(?x)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x)"; b = "P(f(?y))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x a)";  b = "P(a ?x)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(f(?x))"; b = "P(f(a))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x f(?y))"; b = "P(f(?y) f(f(?z)))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y ?z) ?z ?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)";  b = "P(f(?y ?z) a ?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(a ?x f(a ?x))"; b = "P(?y g(?y) f(?z g(?z)))"; 
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x)";  b = "P(f(?x))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?x)"; b = "P(a b))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x b)"; b = "P(a ?x))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y)"; b = "P(a b)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?x)";  b = "P(a b)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?x)";  b = "P(f(?y) ?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y)"; b = "P(f(?y) ?x)"; 
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y) ?z ?x)"; 
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y ?z) f(?x ?z) f(?x ?y))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y ?z) f(?x ?z) f(?x ?y))";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y ?z) ?z ?y)"; 
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(f(?y ?z) a ?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(a ?x b)"; b = "P(?x ?y ?y)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?z ?y)"; b = "P(f(?z)?y ?x)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)";  b = "P(?y ?z ?v)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(?y ?z a)";
+	    out = ontooo.unify(a, b);
+	    ontooo.clear();
+	    a = "P(?x ?y ?z)"; b = "P(?y ?z f(x))";
+	    out = ontooo.unify(a, b);
+	    */
+	}
+    } // end runSmallFailTests
+
      // Generator of 1st argument that causes normally exponential blow up 
      static public String gen1arg1(int n) { return ZGen.gen1arg1(n); }
      static public String gen1arg1f(int n) { return ZGen.gen1arg1f(n); }
@@ -628,7 +867,7 @@ public class ZTest0 {
      static public String gen4arg2f(int n) { return ZGen.gen4arg2f(n); }
 
  } // end  ZTest0
-
+/*
 class Vnode {
     private Variable v;
     public Vnode(Variable x) { v = x; }
@@ -653,8 +892,8 @@ class Vnode {
     private Term l2 = null; // for post processing
     public void setL2(Term lx) { l2 = lx; }
     public Term ready() { return l2; }
-
 } // end Vnode
+*/
 
 class TermsPair1 {
     protected Term s1;
@@ -667,12 +906,12 @@ class TermsPair1 {
 class Ontooo {
     public void clear() {
 	// int cnt = 0;
-	htv = new Hashtable<Variable, Vnode>();
+	htv = new Hashtable<Variable, String>();
 	sigma = new Vector();
 	stack = new Stack<TermsPair1>();
     }
-    private static boolean trace = false;  // reset as needed
-    // private static boolean trace = true; 
+    // private static boolean trace = false;  // reset as needed
+    private static boolean trace = true; 
     // private int cnt = 0;
     Parser parser = new Parser(false);
     private String arg1;
@@ -746,12 +985,12 @@ class Ontooo {
     private Term exploreVariable(Variable vi, Term val) {
 	// System.out.println("exploreVariable vi: " + vi.html() + " val: " + 
 	//                    val.html());
-	Vnode vnode = htv.get(vi);
-	Term l2 = vnode.ready();
+	///Vnode vnode = htv.get(vi);
+	Term l2 = vi.ready();
 	if ( null != l2 ) return l2;
 	l2 = descend(vi, val);
 	if ( null == l2 ) l2 = vi;
-	vnode.setL2(l2);
+	vi.setL2(l2);
 	// System.out.println("exploreVariable l2: " + l2.html());
 	return l2; 
     } // end exploreVariable
@@ -761,17 +1000,17 @@ class Ontooo {
 	if ( null == val ) return null;
 	if ( val instanceof Variable ) {
 	    Variable v = (Variable) val;
-	    Vnode vnode = htv.get(v);
-	    Term first = vnode.getFirst();
+	    // Vnode vnode = htv.get(v);
+	    Term first = v.getFirst();
 	    if ( null != first ) 
 		return exploreVariable(v, first);
-	    if ( !vnode.isVroot ) 
-		return descend(v, vnode.myVroot);
+	    if ( !v.isVroot ) 
+		return descend(v, v.myVroot);
 	    return v;
 	}
 	if ( val instanceof Symbol ) return val;
-	Vnode vnodei = htv.get(vi);
-	Term l2 = vnodei.ready();
+	// Vnode vnodei = htv.get(vi);
+	Term l2 = vi.ready();
 	if ( null != l2 ) return l2;
 	FTerm val2 = (FTerm) val;
 	Symbol head = val2.getFunction();
@@ -783,7 +1022,7 @@ class Ontooo {
 	    argsOut.addElement(li);
 	}
 	FTerm cl = new FTerm(head, argsOut);
-	vnodei.setL2(cl);
+	vi.setL2(cl);
 	return cl; 
     } // end descend
 
@@ -805,12 +1044,14 @@ class Ontooo {
     } // end parseIt
 
     // private Hashtable htc = new Hashtable(); // not used
-    private Hashtable<Variable, Vnode> htv = new Hashtable<Variable, Vnode>();
+    private Hashtable<Variable, String> htv = new Hashtable<Variable, String>();
 
     private void findVariables(Formula in) {
 	if ( in instanceof Variable ) {
 	    Variable v = (Variable) in;
-	    if ( !htv.containsKey(in) ) htv.put(v, new Vnode(v));
+	    String symbolName = v.getName();
+	    // if ( !htv.containsKey(in) ) htv.put(v, new Vnode(v));
+	    if ( !htv.containsKey(symbolName) ) htv.put(v, symbolName);
 	}
 	if ( in instanceof Atom ) {
 	    Atom a = (Atom) in;
@@ -844,21 +1085,21 @@ class Ontooo {
 	Enumeration enumx = htv.keys();
 	while ( enumx.hasMoreElements() ) { // show what is in htv
 	    Variable v = (Variable)enumx.nextElement();
-	    Vnode vnodev = htv.get(v);
+	    // Vnode vnodev = htv.get(v);
 	    Variable v2 = v;
-	    if ( !vnodev.isVroot ) {
-		v2 = findVroot(vnodev);
-		vnodev = htv.get(v2);
+	    if ( !v.isVroot ) {
+		v2 = findVroot(v);
+		// vnodev = htv.get(v2);
 	    }
-	    Term first =  vnodev.getFirst();
+	    Term first =  v2.getFirst();
 	    if ( null == first ) {
 		if ( trace ) System.out.println("v: " + v.html() + " null"); 
-		if ( vnodev.isVroot ) {
+		if ( v2.isVroot ) {
 		    SubsZ sub = new SubsZ(v, v2); 
 		    addSubs(sub);
 		    continue;
 		}
-		Variable vx = vnodev.myVroot;
+		Variable vx = v2.myVroot;
 		SubsZ sub = new SubsZ(v, vx);
 		addSubs(sub);
 	    }
@@ -870,6 +1111,7 @@ class Ontooo {
 		    System.out.println("v: " + v.html() + " first: " + first.html() +
 				       " |vars| = " + ( null == vars ? 0 :  vars.size() ) );
 		}
+		// vars is used for what?
 	    }
 	}
 
@@ -919,49 +1161,43 @@ class Ontooo {
 	if ( s.equals(t) ) return true;  // identical constants or variables
 	if ( (s instanceof Variable) ) {
 	    Variable sv = (Variable) s;
-	    Vnode snode = htv.get(sv);
-	    if ( null == snode ) { 
-		snode = new Vnode(sv);
-		htv.put(sv, snode);
-	    } else 
-	    if ( !snode.isVroot ) {
-		sv = findVroot(snode);
-		snode = htv.get(sv);
+	    String svName = sv.getName();
+	    if ( null == htv.get(svName) ) {
+		// System.out.println("unif2 svName not in htv svName: " + svName);
+		htv.put(sv, svName);
 	    }
+	    if ( !sv.isVroot ) sv = findVroot(sv);
 	    // sv is root or sv is Vroot
 	    if ( (t instanceof Variable) ) {
 		Variable tv = (Variable) t;
-		Vnode tnode  = htv.get(tv);
-		if ( null == tnode ) {
-		    tnode = new Vnode(tv);
-		    htv.put(tv, tnode);
-		} else
-		if ( !tnode.isVroot ) {
-		    tv = findVroot(tnode);
-		    tnode = htv.get(tv);
+		String tvName = tv.getName();
+		if ( null == htv.get(tvName) ) {
+		    //System.out.println("unif2  tvName not in htv tvName: " + tvName);
+		    htv.put(tv, tvName);
 		}
+		if ( !tv.isVroot ) tv = findVroot(tv);
 		// sv is root or sv is Vroot and tv is root or tv is Vroot 
 		if ( sv.equals(tv) ) return true;
-		int sizes = snode.getSize(), sizet = tnode.getSize();
+		int sizes = sv.getSize(), sizet = tv.getSize();
 		if ( sizet <= sizes ) 
-		    snode.setSize(sizes + sizet); 
+		    sv.setSize(sizes + sizet); 
 		else
-		    tnode.setSize(sizes + sizet);
-		if ( snode.isRoot() ) {
-		    Term sterm = snode.getFirst();
-		    if ( tnode.isRoot() ) {
+		    tv.setSize(sizes + sizet);
+		if ( sv.isRoot() ) {
+		    Term sterm = sv.getFirst();
+		    if ( tv.isRoot() ) {
 			if ( sizet <= sizes ) {
-			    tnode.isVroot = false;
-			    tnode.myVroot = sv;
+			    tv.isVroot = false;
+			    tv.myVroot = sv;
 			} else {
-			    snode.isVroot = false;
-			    snode.myVroot = tv;
+			    sv.isVroot = false;
+			    sv.myVroot = tv;
 			}
-			Term tterm = tnode.getFirst();
-			// optional
-			if ( snode.variables != null && snode.variables.contains(tv) )
-			    return message(" unif2A sterm contains tv", sterm, tv);
-			if ( tnode.variables != null && tnode.variables.contains(sv) )
+			Term tterm = tv.getFirst();
+			/* // optional
+			if ( sv.variables != null && sv.variables.contains(tv) )
+			    return message("unif2A sterm contains tv", sterm, tv);
+			if ( tv.variables != null && tv.variables.contains(sv) )
 			    return message("unif2B tterm contains sv", tterm, sv);
 			// */
 			if ( !unif2(sterm, tterm) )
@@ -969,81 +1205,77 @@ class Ontooo {
 			return true;
 		    }
 		    // snode is root and  tnode is not root, tnode is Vroot
-		    ///* // optional
-		    if ( snode.variables != null && snode.variables.contains(tv) ) 
+		    /* // optional
+		    if ( sv.variables != null && sv.variables.contains(tv) ) 
 		        return message("unif2D sterm contains tv", sterm, tv);
 		    // */
-		    tnode.isVroot = false;
-		    tnode.myVroot = sv;
+		    tv.isVroot = false;
+		    tv.myVroot = sv;
 		    return true;
 		}
 		// snode is not root, is Vroot
-		if ( tnode.isRoot() ) {
-		    Term tterm = tnode.getFirst();
-		    // /* // optional
-		    if ( tnode.variables != null && tnode.variables.contains(sv) )
+		if ( tv.isRoot() ) {
+		    Term tterm = tv.getFirst();
+		    /* // optional
+		    if ( tv.variables != null && tv.variables.contains(sv) )
 		        return message("unif2E tterm contains sv", tterm, sv);
 		    // */
-		    snode.isVroot = false;
-		    snode.myVroot = tv;
+		    sv.isVroot = false;
+		    sv.myVroot = tv;
 		    return true;
 		}
 		// snode is not root, is Vroot & tnode is not root, is Vroot
 		if ( sizet <= sizes ) {
-		    tnode.isVroot = false;
-		    tnode.myVroot = sv;
+		    tv.isVroot = false;
+		    tv.myVroot = sv;
 		} else {
-		    snode.isVroot = false;
-		    snode.myVroot = tv;
+		    sv.isVroot = false;
+		    sv.myVroot = tv;
 		}
 		return true;
 	    }
 	    // s variable &  t not a variable
-	    if ( snode.isRoot() ) {
-		Term sterm = snode.getFirst();
+	    if ( sv.isRoot() ) {
+		Term sterm = sv.getFirst();
 		if ( !unif2(sterm, t) ) return message("unif2F sterm t", sterm, t);
 		return true;
 	    }
 	    //  s variable & s is Vroot  t not a variable
-	    snode.variables = t.getVariables();
-	    if ( snode.variables != null && snode.variables.contains(sv) )
+	    sv.variables = t.getVariables();
+	    if ( sv.variables != null && sv.variables.contains(sv) )
 		return message("unif2G t contains sv", t, sv);
-	    snode.setFirst(t);
+	    sv.setFirst(t);
 	    return true;
 	}
 	// s not a variable
 	if ( (t instanceof Variable) ) {
 	    Variable tv = (Variable) t;
-	    Vnode tnode  = htv.get(tv);
-	    if ( null == tnode ) {
-		tnode = new Vnode(tv);
-		htv.put(tv, tnode);
-	    } else
-	    if ( !tnode.isVroot ) {
-		tv = findVroot(tnode);
-		tnode  = (Vnode) htv.get(tv);
+	    String tvName = tv.getName();
+	    if ( null == htv.get(tvName) ) {
+		// System.out.println("unif2 tvName not in htv tvName: " + tvName);
+		htv.put(tv, tvName);
 	    }
-	    if ( tnode.isRoot() ) { 
-		Term tterm = tnode.getFirst();
+	    if ( !tv.isVroot ) tv = findVroot(tv);
+	    if ( tv.isRoot() ) { 
+		Term tterm = tv.getFirst();
 		if ( !unif2(tterm, s) ) return message("unif2H tterm s", tterm, s);
 		return true;
 	    }
 	    //  s not a variable & tnode is not root isVroot 
-	    tnode.variables = s.getVariables();
-	    if ( tnode.variables != null && tnode.variables.contains(tv) )
+	    tv.variables = s.getVariables();
+	    if ( tv.variables != null && tv.variables.contains(tv) )
 	       return message("unif2I s contains tv", s, tv);
-	    tnode.setFirst(s);
+	    tv.setFirst(s);
 	    return true;
 	}
 	// s not a variable & t not a variable 
 	return unif4(s, t); // both s and t are not variables
     } // end unif2
 
-    private Variable findVroot(Vnode vn) {
-	if ( vn.isVroot ) return vn.getVariable();
+    private Variable findVroot(Variable vn) {
+	if ( vn.isVroot ) return vn;
 	Variable vx = vn.myVroot;
-	Vnode vxnode = htv.get(vx);
-	Variable y = findVroot(vxnode);
+	Variable y = findVroot(vx);
 	vn.myVroot = y;
 	return y;
     } // end findVroot
@@ -1055,13 +1287,14 @@ class Ontooo {
 	    while ( enumx.hasMoreElements() ) { // show what is in htv
 		Variable v = (Variable)enumx.nextElement();
 		System.out.println("v: " + v.html());
-		Vnode vn = htv.get(v);
-		Term first = vn.getFirst();
+		// Vnode vn = htv.get(v);
+		// Term first = vn.getFirst();
+		Term first = v.getFirst();
 		if ( null == first ) System.out.println("no first"); else
 		    System.out.println("first: " + first.html());
-		System.out.println("isRoot: " + vn.isRoot());
-		System.out.println("isVroot: " + vn.isVroot);
-		Variable myVroot = vn.myVroot;
+		System.out.println("isRoot: " + v.isRoot());
+		System.out.println("isVroot: " + v.isVroot);
+		Variable myVroot = v.myVroot;
 		System.out.println("myVroot: " + 
 			  ( null == myVroot ? "no myVroot" : myVroot.html()));		
 	    }
@@ -1107,41 +1340,37 @@ class Ontooo {
     }
     private boolean check(Variable v) {
 	ZTest0.cnt++;
-	// if ( trace ) System.out.println("check v: " + v.html());
-	Vnode vn = htv.get(v);
-	if ( vn.checked ) {
+	if ( trace ) System.out.println("check v: " + v.html());
+	if ( v.checked ) {
 	    // if ( trace ) System.out.println("checked! v: " + v.html());
 	    return true;
 	}
-	if ( vn.checking ) return message("check checking cycle", v, v);
-	if ( !vn.isRoot() ) { // not matched against a term
-	    if ( vn.isVroot ) { // not matched against a variable
-		vn.checked = true;
+	if ( v.checking ) return message("check checking cycle", v, v);
+	if ( !v.isRoot() ) { // not matched against a term
+	    if ( v.isVroot ) { // not matched against a variable
+		v.checked = true;
 		return true;
 	    }
-	    vn.checking = true;
-	    Variable vnVroot = vn.myVroot;
+	    v.checking = true;
+	    Variable vnVroot = v.myVroot;
 	    if ( !check(vnVroot) ) return message("unif5 ", v, vnVroot);
-	    vn.checking = false;
-	    vn.checked = true;
+	    v.checking = false;
+	    v.checked = true;
 	    return true;
-	} // vn is root
-	vn.checking = true;
-	// Term first = vn.getFirst();
-	// if ( trace ) System.out.println("check first: " + first.html());
-	// HashSet variables = first.getVariables();
-	HashSet variables = vn.variables;
+	} // v is root
+	v.checking = true;
+	HashSet variables = v.variables;
 	if ( null == variables ) {
-	    vn.checking = false;
-	    vn.checked = true;
+	    v.checking = false;
+	    v.checked = true;
 	    return true;
 	}
 	for( Iterator i = variables.iterator(); i.hasNext(); ) {
 	    Variable w = (Variable)i.next();
 	    if ( !check(w) ) return message("check3 v w ", v, w);
 	}
-	vn.checking = false;
-	vn.checked = true;
+	v.checking = false;
+	v.checked = true;
 	return true;
     } // end check
     

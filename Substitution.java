@@ -15,7 +15,10 @@ public class Substitution implements Serializable {
     }
     public Variable getVariable() { return var; }
     public Term getTerm() { return term; }
-    public void setTerm(Term term) { this.term = term; }
+    public void setTerm(Term term) { 
+	html = null; 
+	this.term = term; 
+    }
     private String html = null;
     public String html() {
 	if ( null == html ) html = var.html() + "-> " + term.html() + " ";
