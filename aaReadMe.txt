@@ -26,7 +26,7 @@ parameters that can be turned on/off.
 
 The eight generators for argument pairs are in the file ZGen.
 
-The file LinUnify.pdf has a description of these unification versions.
+The file LinUnify2.pdf has a description of these unification versions.
 
 Installation
 ------------
