@@ -32,7 +32,7 @@ Installation
 ------------
 Create a directory 'fol' and include the content of the repository.
 To compile: execute in the directory fol simply: javac *.java.
-To execute a driver in a directory ABOVE fol execute, for example:
+To execute a driver go in a directory ABOVE fol and, for example:
     java fol.ZTestLUnify
 
 
