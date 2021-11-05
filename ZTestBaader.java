@@ -15,20 +15,18 @@ public class ZTestBaader {
 	// The unify function return null in case of non-unification
 
 	// Parser parser = new Parser(false);
-	// for (int i = 1; i <= 1; i++) {
-	for (int i = 2; i <= 2; i++) {
+	for (int i = 1; i <= 1; i++) {
+	// for (int i = 2; i <= 2; i++) {
 	// for (int i = 1; i <= 7; i++) {
 	// for (int i = 800; i <= 810; i++) {
 	// for (int i = 100; i <= 1000; i = i + 100) {
 	// for (int i = 1500; i <= 1510; i++) {
 	    // if (trace) System.out.println("size: " + i);
-	    String a = gen1arg1(i); // generator
-	    String b = gen1arg2(i); // generator
+	    // String a = gen1arg1(i); // generator
+	    // String b = gen1arg2(i); // generator
 	    // String a = gen1arg1f(i); // generator
 	    // String a = gen2arg1(i); // generator
 	    // String b = gen2arg2(i); // generator
-	    // if (trace) System.out.println("size: " + i);
-
 	    // String b = gen2arg2f(i); // generator
 	    // String a = gen3arg1(i); // generator
 	    // String b = gen3arg2(i); // generator
@@ -71,8 +69,8 @@ public class ZTestBaader {
 	    // String a = "P(?x)";  String b = "P(?y)"; // duplicate
 	    // String a = "P(?x ?y ?z)";  String b = "P(?y ?z a)";
 
-	    // String a = "P(?x f(?y))";  String b = "P(f(?y) f(f(?z)))"; // test post
-	    // String a = "P(a ?x f(a ?x))"; String b = "P(?y g(?y) f(?z g(?z)))"; // text !!!
+	    // String a = "P(?x f(?y))";  String b = "P(f(?y) f(f(?z)))"; // test post ++++
+	    String a = "P(a ?x f(a ?x))"; String b = "P(?y g(?y) f(?z g(?z)))"; // text !!!
 
 	    // String a = "P(?x ?y a)"; String b = "P(?y ?x ?x)";
 	    // String a = "P(f(?x) g(a))"; String b = "P(?y ?x)";
@@ -965,9 +963,7 @@ class Baader {
 	    if ( (s instanceof VariableNode) && (t instanceof VariableNode) ) {
 		HashSet hs = s.getVars();
 		for (Iterator i = t.getVars().iterator(); i.hasNext();) {
-		    Node x = (Node)i.next();
-		    // if ( !hs.contains(x) ) hs.add(x); // duplicates are ignored
-		    hs.add(x);
+		    hs.add(i.next()); // duplicates are ignored
 		}
 	    }
 	    if ( (s instanceof VariableNode) ) {
@@ -985,9 +981,7 @@ class Baader {
 	    if ( (s instanceof VariableNode) && (t instanceof VariableNode) ) {
 		HashSet ht = t.getVars();
 		for (Iterator i = s.getVars().iterator(); i.hasNext();) {
-		    Node x = (Node)i.next();
-		    // if ( !ht.contains(x) ) ht.add(x); // duplicates are ignored
-		    ht.add(x);
+		    ht.add(i.next()); // duplicates are ignored
 		}
 	    }
 	    if ( (t instanceof VariableNode) ) {
@@ -995,12 +989,13 @@ class Baader {
 		    t.setSchema(s.getSchema()); s.setMyClass(t); 
 		} 
 	    } else {
-		    if ( (s.getSchema()) instanceof VariableNode ) { 
-			s.setSchema(t.getSchema()); s.setMyClass(t); 
-		    } else 
-			s.setMyClass(t); 
+		if ( (s.getSchema()) instanceof VariableNode ) { 
+		    s.setSchema(t.getSchema()); s.setMyClass(t); 
+		} else 
+		    s.setMyClass(t); 
 	    }
 	}
+	   
 	if ( trace ) { 
 	    System.out.println("union exit s: " +
 			       s.html() + " size: " + s.getSize() + " t: " +

@@ -1204,7 +1204,7 @@ class Ontooo {
 			    return message("unif2C sterm tterm", sterm, tterm);
 			return true;
 		    }
-		    // snode is root and  tnode is not root, tnode is Vroot
+		    // sv is root and tv is not root, tv is Vroot
 		    /* // optional
 		    if ( sv.variables != null && sv.variables.contains(tv) ) 
 		        return message("unif2D sterm contains tv", sterm, tv);
@@ -1213,10 +1213,10 @@ class Ontooo {
 		    tv.myVroot = sv;
 		    return true;
 		}
-		// snode is not root, is Vroot
+		// sv is not root, is Vroot
 		if ( tv.isRoot() ) {
-		    Term tterm = tv.getFirst();
 		    /* // optional
+		    Term tterm = tv.getFirst();
 		    if ( tv.variables != null && tv.variables.contains(sv) )
 		        return message("unif2E tterm contains sv", tterm, sv);
 		    // */
@@ -1224,7 +1224,7 @@ class Ontooo {
 		    sv.myVroot = tv;
 		    return true;
 		}
-		// snode is not root, is Vroot & tnode is not root, is Vroot
+		// sv is not root, is Vroot & tv is not root, is Vroot
 		if ( sizet <= sizes ) {
 		    tv.isVroot = false;
 		    tv.myVroot = sv;
@@ -1241,7 +1241,7 @@ class Ontooo {
 		return true;
 	    }
 	    //  s variable & s is Vroot  t not a variable
-	    sv.variables = t.getVariables();
+	    sv.variables = t.getVariables(); // the variables in the pre-substitution
 	    if ( sv.variables != null && sv.variables.contains(sv) )
 		return message("unif2G t contains sv", t, sv);
 	    sv.setFirst(t);
@@ -1261,8 +1261,8 @@ class Ontooo {
 		if ( !unif2(tterm, s) ) return message("unif2H tterm s", tterm, s);
 		return true;
 	    }
-	    //  s not a variable & tnode is not root isVroot 
-	    tv.variables = s.getVariables();
+	    //  s not a variable & tv is not root isVroot 
+	    tv.variables = s.getVariables(); // the variables in the pre-substitution
 	    if ( tv.variables != null && tv.variables.contains(tv) )
 	       return message("unif2I s contains tv", s, tv);
 	    tv.setFirst(s);
@@ -1353,7 +1353,7 @@ class Ontooo {
 	    }
 	    v.checking = true;
 	    Variable vnVroot = v.myVroot;
-	    if ( !check(vnVroot) ) return message("unif5 ", v, vnVroot);
+	    if ( !check(vnVroot) ) return message("check2 ", v, vnVroot);
 	    v.checking = false;
 	    v.checked = true;
 	    return true;
